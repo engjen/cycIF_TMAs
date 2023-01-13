@@ -1,4 +1,6 @@
 # cycIF_TMAs
+
+## Analysis Code
 Analysis of multiplex imaging data from breast cancer tissue microarrays. Images and data available at https://www.synapse.org/#!Synapse:syn50134757/. (Free account required).
 
 
@@ -39,3 +41,23 @@ https://github.com/engjen/cycIF_TMAs/blob/main/20220922_spatstat_IMC_MIBI.ipynb
 
 https://github.com/engjen/cycIF_TMAs/blob/main/BC_Spatial_LDA_1.ipynb
 
+
+## Analysis environment
+
+After installing python3/miniconda, enter the following in the terminal to set up an `analysis` environment. 
+
+`conda create -n analysis`
+
+`conda activate analysis`
+
+`conda install seaborn scikit-learn statsmodels numba pytables pandas ipykernel`
+
+`conda install -c conda-forge jupyterlab matplotlib python-igraph leidenalg scikit-image opencv tifffile libpysal shapely lifelines umap-learn napari scanpy statsmodels`
+
+`conda install -c anaconda psutil pysal pillow`
+
+`conda install -c bioconda anndata`
+
+`pip install DeepCell`
+
+`git clone https://gitlab.com/engje/mplex_image.git`
