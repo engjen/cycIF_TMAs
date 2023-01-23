@@ -44,7 +44,7 @@ https://github.com/engjen/cycIF_TMAs/blob/main/BC_Spatial_LDA_1.ipynb
 
 ## Analysis environment
 
-After installing python3/miniconda, enter the following in the terminal to set up an `analysis` environment. 
+To run the main analysis, installing python3/miniconda, and enter the following in the terminal to set up an `analysis` environment. 
 
 `conda create -n analysis`
 
@@ -58,6 +58,15 @@ After installing python3/miniconda, enter the following in the terminal to set u
 
 `conda install -c bioconda anndata`
 
-`pip install DeepCell`
+Finally, clone my repo for processing, visualization and analysis of multiplex imaging data
 
 `git clone https://gitlab.com/engje/mplex_image.git`
+
+## Other environments
+
+To run image processing of cycIF images, set up environment to run our mplexable pipeline as described here:
+https://gitlab.com/engje/mplexable
+
+To run image processing of IMC and MIBI images, set up an enviroment to run DeepCell, available here: https://pypi.org/project/DeepCell/
+
+To run spatstat analysis, create an environment with a r kernel.
