@@ -1,15 +1,15 @@
 # cycIF_TMAs
 
-## Analysis Code
-Analysis of multiplex imaging data from breast cancer tissue microarrays. Images and data available at https://www.synapse.org/#!Synapse:syn50134757/. (Free account required).
+Analysis of multiplex imaging data from breast cancer tissue microarrays. Images and large data files available at https://www.synapse.org/#!Synapse:syn50134757/. (Free account required).
+
+## Main Analysis Notebook
+
+**Used to generate all figures in paper.**
+
+**https://github.com/engjen/cycIF_TMAs/blob/main/20220912_JP-IMC-MIBI-TMAs_survival_spatial.ipynb**
 
 
-### Main analysis notebook
-
-Used to generate all figures in paper.
-
-https://github.com/engjen/cycIF_TMAs/blob/main/20220912_JP-IMC-MIBI-TMAs_survival_spatial.ipynb
-
+## Additional Code
 
 ### Notebooks and code for image processing
 
@@ -23,7 +23,7 @@ https://github.com/engjen/cycIF_TMAs/blob/main/20220315_MIBI_pipeline.ipynb
 
 ### Notebooks for single cell clustering and annotation
 
-Clustered cells based on biomarker mean intensity using the leiden algorithm.
+Cluster cells based on biomarker mean intensity using the leiden algorithm, and annotate.
 
 https://github.com/engjen/cycIF_TMAs/blob/main/20220118_JP-TMA_both_cluster.ipynb
 
@@ -33,13 +33,19 @@ https://github.com/engjen/cycIF_TMAs/blob/main/20220410_MIBI_cluster.ipynb
 
 ### Notebooks for running spatstat and spatialLDA
 
-Spatstat package used for Ripley's L, K cross. spatialLDA used for neighborhood analysis.
+Spatstat package used for Ripley's L, K cross, G cross, Occupancy. spatialLDA used for neighborhood analysis.
 
-https://github.com/engjen/cycIF_TMAs/blob/main/20220922_spatstat_cycIF.ipynb
+https://github.com/engjen/cycIF_TMAs/blob/main/20230419_spatstat_cycIF_TMAs.ipynb
 
 https://github.com/engjen/cycIF_TMAs/blob/main/20220922_spatstat_IMC_MIBI.ipynb
 
 https://github.com/engjen/cycIF_TMAs/blob/main/BC_Spatial_LDA_1.ipynb
+
+### Code for visualization of images in Napari 
+
+For QC and ROI selection.
+
+https://github.com/engjen/cycIF_TMAs/blob/main/20201018_JP-TMAs_napari.py
 
 
 ## Analysis environment
@@ -67,6 +73,6 @@ Finally, clone my repo for processing, visualization and analysis of multiplex i
 To run image processing of cycIF images, set up environment to run our mplexable pipeline as described here:
 https://gitlab.com/engje/mplexable
 
-To run image processing of IMC and MIBI images, set up an enviroment to run DeepCell, available here: https://pypi.org/project/DeepCell/
+To run image processing of IMC and MIBI images (image smoothing, segmentation and feature extraction), set up an enviroment to run DeepCell, available here: https://pypi.org/project/DeepCell/
 
 To run spatstat analysis, create an environment with a r kernel.
