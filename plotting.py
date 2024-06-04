@@ -174,7 +174,61 @@ def low_high_abun(df_all,s_subtype,s_plat,s_col,cutp=0.5):
         df.loc[b_low,'abundance'] = 'low'
         df.loc[~b_low,'abundance'] = 'high'
     return(df)
-    
+
+def km_plot_cat(df,s_col,s_time,s_censor,fontsize='medium',loc='upper center',alpha=0.08,figsize=(3,3),x=0.7):
+    results = multivariate_logrank_test(event_durations=df.loc[:,s_time],
+                                    groups=df.loc[:,s_col], event_observed=df.loc[:,s_censor])        
+    kmf = KaplanMeierFitter()
+    fig, ax = plt.subplots(figsize=figsize,dpi=400)
+    ls_order = sorted(df.loc[:,s_col].dropna().unique())
+    #print(ls_order)
+    for s_group in ls_order:
+        #print(s_group)
+        df_abun = df[df.loc[:,s_col]==s_group]
+        durations = df_abun.loc[:,s_time]
+        event_observed = df_abun.loc[:,s_censor]
+        kmf.fit(durations,event_observed,label=s_group)
+        kmf.plot(ax=ax,ci_show=True,show_censors=True,ci_alpha=alpha,censor_styles={"marker": "|"})
+        print(f'{s_col} {s_group} Median = {kmf.median_survival_time_}')
+    if len(ls_order)==2:
+        pvalue = f"{results.summary.p[0]:.2}"
+        demo_con_style(ax,x,0.93,0.78,0.9, f"P={pvalue}")
+        ax.set_title(f'{s_col.replace("_"," ")}')
+    else:
+        ax.set_title(f'{s_col.replace("_"," ")}\nP={results.summary.p[0]:.2}')
+    ls_n = [df.loc[:,s_col].value_counts()[item] for item in ls_order]
+    print(ls_n)
+    h,l = ax.get_legend_handles_labels()
+    print(l)
+    labels = [f'{item}\n(N={ls_n[idx]})' for idx, item in enumerate(l)]
+    ax.legend(labels=labels,handles=h,fancybox=False,frameon=False,loc=loc,fontsize=fontsize)
+    ax.set_ylim(-0.05,1.05)
+    # Hide the right and top spines
+    ax.spines[['right', 'top']].set_visible(False)
+    ax.set_ylabel(f'Probability of {s_censor}')
+    ax.set_xlabel(f'{s_time.replace("Survival_time","Overall Survival").replace("Recurrence_time","Recurrence-Free Survival")} (days)')
+
+    return(fig,ax,ls_order)
+
+def demo_con_style(ax,x,top, bottom,ytext,pvalue):
+    connectionstyle = "bar,fraction=0.2"
+    x1 = x #x1, y1 = 0.8, 0.9
+    x2 = x  #x2, y2 = 0.8, 0.8
+    y1 = top
+    y2 = bottom
+    #ax.plot([x1, x2], [y1, y2], ".",color='white')
+    ax.annotate("",#pvalue,#
+                xy=(x1, y1), xycoords=ax.transAxes,#'data',
+                xytext=(x2, y2), textcoords=ax.transAxes,#'data',
+                arrowprops=dict(arrowstyle="-", color="k",
+                                #shrinkA=5, shrinkB=5,
+                                patchA=None, patchB=None,
+                                connectionstyle=connectionstyle,
+                                ),
+                )
+    ax.text(x+0.06, ytext, pvalue,transform=ax.transAxes,
+            ha="left", va="top",fontsize='medium')
+
 #fuction to plot km curve for categorical variable
 def cat_km(df,s_col,s_time,s_censor):
     df_lr = pd.DataFrame()
