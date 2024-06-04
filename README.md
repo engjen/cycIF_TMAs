@@ -25,11 +25,23 @@ https://github.com/engjen/cycIF_TMAs/blob/main/20220315_MIBI_pipeline.ipynb
 
 Cluster cells based on biomarker mean intensity using the leiden algorithm, and annotate.
 
+**Breast cancer datasets:**
+
 https://github.com/engjen/cycIF_TMAs/blob/main/20220118_JP-TMA_both_cluster.ipynb
 
 https://github.com/engjen/cycIF_TMAs/blob/main/20220201_IMC_cluster_Mesmer_both.ipynb
 
 https://github.com/engjen/cycIF_TMAs/blob/main/20220410_MIBI_cluster.ipynb
+
+**Control datasets:**
+
+https://github.com/engjen/cycIF_TMAs/blob/main/20240520_NP-DCIS_cluster.ipynb
+
+https://github.com/engjen/cycIF_TMAs/blob/main/20240523_HER2-TMA_cluster.ipynb
+
+https://github.com/engjen/cycIF_TMAs/blob/main/20240528_U54-TMA_MIBI_cluster.ipynb
+
+https://github.com/engjen/cycIF_TMAs/blob/main/20240528_U54-TMA_cycIF_cluster.ipynb
 
 ### Notebooks for running spatstat and spatialLDA
 
