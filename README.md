@@ -64,7 +64,16 @@ https://github.com/engjen/cycIF_TMAs/blob/main/20201018_JP-TMAs_napari.py
 
 ## Analysis environment
 
-To run the main analysis, installing python3/miniconda, and enter the following in the terminal to set up an `analysis` environment. 
+To run the main analysis, instal python3/miniconda, and enter the following in the terminal to set up an `analysis` environment.
+
+`git clone https://github.com/engjen/cycIF_TMAs.git`
+
+`cd cycIF_TMAs`
+
+`conda env create -f environment.yml`
+
+
+#### *- Or enter these commands -* 
 
 `conda create -n analysis`
 
