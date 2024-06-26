@@ -157,6 +157,7 @@ def more_plots(adata,df_p,s_subtype,s_type,s_partition,s_cell,n_neighbors,resolu
     #barplot
     fig,ax=plt.subplots(figsize=(2.5,2.5),dpi=200)
     df_p.groupby(['leiden','Platform','Subtype']).count().iloc[:,0].unstack().loc[marker_genes].plot(kind='barh',title='Patient Count',ax=ax)
+    ax.legend(bbox_to_anchor=(1,1))
     plt.tight_layout()
     fig.savefig(f'{savedir}/barplot_subtyping_{s_type}_{s_partition}_{s_cell}_{s_type}_{n_neighbors}_{resolution}.png')
 
@@ -230,10 +231,10 @@ def demo_con_style(ax,x,top, bottom,ytext,pvalue):
             ha="left", va="top",fontsize='medium')
 
 #fuction to plot km curve for categorical variable
-def cat_km(df,s_col,s_time,s_censor):
+def cat_km(df,s_col,s_time,s_censor,figsize=(4,3)):
     df_lr = pd.DataFrame()
     kmf = KaplanMeierFitter()
-    fig, ax = plt.subplots(figsize=(4,3),dpi=300)
+    fig, ax = plt.subplots(figsize=figsize,dpi=300)
     for s_group in sorted(df.loc[:,s_col].unique()):
         df_abun = df.loc[df.loc[:,s_col]==s_group,[s_col,s_time,s_censor]].dropna()
         #print(len(df_abun))
@@ -251,11 +252,33 @@ def cat_km(df,s_col,s_time,s_censor):
         pvalue = results.summary.p[0]
     except:
         pvalue = 1.0
-    ax.set_title(f'{s_col}\np={pvalue:.2}',fontsize=10)
+    ax.set_title(f'{s_col}\np={pvalue:.2} n={len(df.loc[:,[s_col,s_time,s_censor]].dropna())}',fontsize=10)
     ax.set_xlabel(s_censor)
     ax.legend(bbox_to_anchor=(1.01,0.6),title=f'{s_col}')
     plt.tight_layout()
-    return(fig)
+    return(fig,ax)
+
+def clinical_cph(df_p,s_marker,s_time,s_censor,alpha=1,ls_clin=['age','tumor_size','Stage'],figsize=(3.2,2)): 
+    '''
+    s_marker: categorical 
+    ls_clin = list of floats
+    '''
+    cph = CoxPHFitter(penalizer=0.1)
+    #try:
+    df_dummy = pd.get_dummies(df_p.loc[:,[s_time,s_censor,s_marker]],drop_first=True)
+    df_dummy = df_dummy.rename({f'{df_dummy.columns[-1]}':s_marker},axis=1)
+    df_dummy.index = df_dummy.index.astype('str')
+    df_marker = df_dummy.merge(df_p.loc[:,ls_clin],left_index=True,right_index=True).loc[:,[s_time,s_censor,s_marker] + ls_clin]
+    df_marker = df_marker.dropna()
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        #multi
+        cph.fit(df_marker, s_time, event_col=s_censor) 
+        pvalue = cph.summary.loc[s_marker,'p']
+        print(pvalue)
+    fig2, ax = plt.subplots(figsize=figsize,dpi=200)
+    cph.plot(ax=ax)
+    return(fig2,ax,cph,df_marker)
 
 def single_cph(df_p,s_time,s_censor,alpha=1):
     s_groups = 'abundance'
