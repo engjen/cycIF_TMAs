@@ -29,3 +29,5 @@ dependencies:
   - psutil
   - pysal
   - anndata
+  - openpyxl
+  - matplotlib-venn 
