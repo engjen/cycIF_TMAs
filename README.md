@@ -70,7 +70,7 @@ To run the main analysis, installing python3/miniconda, and enter the following 
 
 `conda install seaborn scikit-learn statsmodels numba pytables pandas ipykernel`
 
-`conda install -c conda-forge jupyterlab matplotlib python-igraph leidenalg scikit-image opencv tifffile libpysal shapely lifelines umap-learn napari scanpy statsmodels`
+`conda install -c conda-forge jupyterlab matplotlib python-igraph leidenalg scikit-image opencv tifffile libpysal shapely lifelines umap-learn napari scanpy statsmodels nodejs`
 
 `conda install -c anaconda psutil pysal pillow`
 
