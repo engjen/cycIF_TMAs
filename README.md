@@ -8,6 +8,8 @@ Analysis of multiplex imaging data from breast cancer tissue microarrays. Images
 
 **https://github.com/engjen/cycIF_TMAs/blob/main/20220912_JP-IMC-MIBI-TMAs_survival_spatial.ipynb**
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/engjen/cycIF_TMAs/HEAD)
+
 
 ## Additional Code
 
