@@ -30,4 +30,4 @@ dependencies:
   - pysal
   - anndata
   - openpyxl
-  - matplotlib-venn 
+  - matplotlib-venn
