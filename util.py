@@ -737,7 +737,7 @@ def single_km(df_all,s_cell,s_subtype,s_plat,s_col,savedir,alpha=0.05,cutp=0.5,s
             ax.set_xlabel(s_censor)
             ax.legend(loc='upper right',title=f'{cutp}({i_cut:.2})')
             plt.tight_layout()
-            fig.savefig(f"{savedir}/Survival_Plots/KM_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}_{cutp}_{s_censor}.png",dpi=300)
+            fig.savefig(f"{savedir}/Survival_Plots/KM_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}_{cutp}_{s_censor}.pdf")
         return(df)
 
 
