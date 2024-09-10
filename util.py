@@ -556,8 +556,11 @@ def km_cph_all(df_both,df_clin,s_title1,s_title2,s_marker,alpha=0.05,s_time='Sur
         ax.set_title(f'{s_title1}\n{s_title2}\n p={pvalue_km:.2} n={len(df_both)}')
         if not p_correct is None:
             ax.set_title(f'{s_title1}\n{s_title2}\n p_corrected={p_correct:.2} n={len(df_both)}')
-        ax.legend(loc='upper right',title=f'{s_groups}')
-        ax.set_xlabel(s_time)
+        ax.legend()
+        handles, labels = ax.get_legend_handles_labels()
+        newlabels = [f'{label} ({df_both.loc[:,s_groups].value_counts()[label]})' for label in labels]
+        ax.legend(handles=handles, labels=newlabels,loc='upper right',title=f'{s_groups}',fontsize='small')
+        ax.set_xlabel(s_time.replace("_"," "))
         plt.tight_layout()  
     else:
         fig1 = None
@@ -735,10 +738,15 @@ def single_km(df_all,s_cell,s_subtype,s_plat,s_col,savedir,alpha=0.05,cutp=0.5,s
                     results.summary.p[0] = 1
             ax.set_title(f'{s_title1}\n{s_title2}\nn={len(df)} p={results.summary.p[0]:.2}',fontsize=10)
             ax.set_xlabel(s_censor)
+            handles, labels = ax.get_legend_handles_labels()
+            
             ax.legend(loc='upper right',title=f'{cutp}({i_cut:.2})')
             plt.tight_layout()
             fig.savefig(f"{savedir}/Survival_Plots/KM_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}_{cutp}_{s_censor}.pdf")
-        return(df)
+        else:
+            fig = None
+            ax = None
+        return(df) #, fig, ax,results.summary.p[0]
 
 
 warnings.filterwarnings("default",category = exceptions.ApproximationWarning)
@@ -892,9 +900,9 @@ def run_multi_test(d_data,df_clin,ls_pval,s_discovery,s_subtype,s_censor,s_time,
             fig1, fig2, pval_cph, pval_km = km_cph_all(df_both_surv,df_clin,s_title1,s_title2,s_col,alpha=alpha,s_time=s_time, s_censor=s_censor,
                    s_groups='abundance',s_cph_model='high',ls_clin=['age','tumor_size','Stage'],p_correct=p_correct_used)
             if not fig1 is None:
-                fig1.savefig(f"{savedir}/KM_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}_{cut_p}.png",dpi=300)
+                fig1.savefig(f"{savedir}/KM_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}_{cut_p}.pdf",dpi=300)
             if not fig2 is None:
-                fig2.savefig(f"{savedir}/CPH_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}_{cut_p}.png")
+                fig2.savefig(f"{savedir}/CPH_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}_{cut_p}.pdf")
             d_result.update({s_col_center:[pval_cph,pval_km]})
     return(d_orig,d_correct,d_result)
 
