@@ -555,7 +555,7 @@ def km_cph_all(df_both,df_clin,s_title1,s_title2,s_marker,alpha=0.05,s_time='Sur
             kmf.plot(ax=ax,ci_show=False,show_censors=True)
         ax.set_title(f'{s_title1}\n{s_title2}\n p={pvalue_km:.2} n={len(df_both)}')
         if not p_correct is None:
-            ax.set_title(f'{s_title1}\n{s_title2}\n p_corrected={p_correct:.2} n={len(df_both)}')
+            ax.set_title(f'{s_title1}\n{s_title2}\n FDR={p_correct:.2} n={len(df_both)}')
         ax.legend()
         handles, labels = ax.get_legend_handles_labels()
         newlabels = [f'{label} ({df_both.loc[:,s_groups].value_counts()[label]})' for label in labels]
