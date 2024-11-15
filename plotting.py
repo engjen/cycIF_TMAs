@@ -43,6 +43,8 @@ from anndata import AnnData
 from sklearn.cluster import AgglomerativeClustering
 
 codedir = os.getcwd()
+mpl.rcParams['pdf.fonttype'] = 42
+mpl.rcParams['ps.fonttype'] = 42
 
 #functions
 
@@ -72,7 +74,7 @@ def km_cph_all(df_both,df_clin,s_title1,s_title2,s_marker,alpha=0.05,s_time='Sur
             kmf.fit(durations, event_observed,label=s_group) #try:#except:#results.summary.p[0] = 1
             kmf.plot(ax=ax,ci_show=False,show_censors=True)
         ax.set_title(f'{s_title1}\n{s_title2}\n p={pvalue_km:.2} n={len(df_both)}')
-        ax.legend(loc='upper right',title=f'{s_groups}')
+        ax.legend(loc='upper right',title=f'{s_groups}',frameon=False)
         ax.set_xlabel(s_time)
         plt.tight_layout()  
     else:
@@ -143,7 +145,7 @@ def more_plots(adata,df_p,s_subtype,s_type,s_partition,s_cell,n_neighbors,resolu
     for label,color in d_color.items():
         g.ax_row_dendrogram.bar(0, 0, color=color,label=label, linewidth=0)
     l2 = g.ax_row_dendrogram.legend(loc="right", ncol=1,bbox_to_anchor=(-0.1, 0.5),bbox_transform=gcf().transFigure)
-    g.savefig(f'{savedir}/clustermap_PlatformandSubtype_{s_type}_{s_partition}_{s_cell}_{s_type}_{n_neighbors}_{resolution}.png',dpi=200)
+    g.savefig(f'{savedir}/clustermap_PlatformandSubtype_{s_type}_{s_partition}_{s_cell}_{s_type}_{n_neighbors}_{resolution}.pdf',dpi=200)
 
     #subtypes' mean
     d_replace = {}
@@ -151,15 +153,15 @@ def more_plots(adata,df_p,s_subtype,s_type,s_partition,s_cell,n_neighbors,resolu
     df_plot.index.name = f'leiden {resolution}'
     g = sns.clustermap(df_plot.dropna().T,z_score=z_score,figsize=(4,len(ls_col)*.25+1),cmap='viridis',vmin=-2,vmax=2,method='ward')
     g.fig.suptitle(f'leiden {resolution}',x=.9) 
-    g.savefig(f'{savedir}/clustermap_subtypes_{s_type}_{s_partition}_{s_cell}_{s_type}_{n_neighbors}_{resolution}.png',dpi=200)
+    g.savefig(f'{savedir}/clustermap_subtypes_{s_type}_{s_partition}_{s_cell}_{s_type}_{n_neighbors}_{resolution}.pdf',dpi=200)
     marker_genes = df_plot.dropna().T.iloc[:,g.dendrogram_col.reordered_ind].columns.tolist()
     categories_order = df_plot.dropna().T.iloc[g.dendrogram_row.reordered_ind,:].index.tolist()
     #barplot
     fig,ax=plt.subplots(figsize=(2.5,2.5),dpi=200)
     df_p.groupby(['leiden','Platform','Subtype']).count().iloc[:,0].unstack().loc[marker_genes].plot(kind='barh',title='Patient Count',ax=ax)
-    ax.legend(bbox_to_anchor=(1,1))
+    ax.legend(bbox_to_anchor=(1,1),frameon=False)
     plt.tight_layout()
-    fig.savefig(f'{savedir}/barplot_subtyping_{s_type}_{s_partition}_{s_cell}_{s_type}_{n_neighbors}_{resolution}.png')
+    fig.savefig(f'{savedir}/barplot_subtyping_{s_type}_{s_partition}_{s_cell}_{s_type}_{n_neighbors}_{resolution}.pdf')
 
 
 ## find best cutpoint 
@@ -339,9 +341,9 @@ def single_km(df_all,s_cell,s_subtype,s_plat,s_col,savedir,alpha=0.05,cutp=0.5,s
                     results.summary.p[0] = 1
             ax.set_title(f'{s_title1}\n{s_title2}\nn={len(df)} p={results.summary.p[0]:.2}',fontsize=10)
             ax.set_xlabel(s_censor)
-            ax.legend(loc='upper right',title=f'{cutp}({i_cut:.2})')
+            ax.legend(loc='upper right',title=f'{cutp}({i_cut:.2})',frameon=False)
             plt.tight_layout()
-            fig.savefig(f"{savedir}/Survival_Plots/KM_{s_title1.replace('','_')}_{s_title2.replace('','_')}_{cutp}_{s_censor}.png",dpi=300)
+            fig.savefig(f"{savedir}/Survival_Plots/KM_{s_title1.replace('','_')}_{s_title2.replace('','_')}_{cutp}_{s_censor}.pdf",dpi=300)
         return(df)
 
 def km_pvalue(df,s_col,s_time,s_censor,cutp=0.5):
@@ -470,9 +472,9 @@ def single_var_km_cph(df_all,df_surv,s_subtype,s_platform,s_cell,alpha=0.05,min_
                 except:
                     print('.')
             ax.set_title(f'{s_title1}\n{s_title2}\np={results.summary.p[0]:.2} (n={len(df)})',fontsize=10)
-            ax.legend(loc='upper right',title=f'{df.loc[:,s_col].median():.2}')
+            ax.legend(loc='upper right',title=f'{df.loc[:,s_col].median():.2}',frameon=False)
             plt.tight_layout()
-            fig.savefig(f"{savedir}/KM_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}.png",dpi=300)
+            fig.savefig(f"{savedir}/KM_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}.pdf",dpi=300)
         #CPH
         cph2 = CoxPHFitter(penalizer=0.1)
         with warnings.catch_warnings():
@@ -487,7 +489,7 @@ def single_var_km_cph(df_all,df_surv,s_subtype,s_platform,s_cell,alpha=0.05,min_
                     ax.set_ylabel(f'{s_col}')
                     ax.set_yticklabels([])
                     plt.tight_layout()
-                    fig.savefig(f"{savedir}/CPH_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}.png",dpi=300)
+                    fig.savefig(f"{savedir}/CPH_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}.pdf",dpi=300)
             except:
                 print(f'skipped {s_col}')   
     return(df)
@@ -507,28 +509,28 @@ def make_adata(df, ls_col,df_surv, n_neighbors, s_subtype, s_type, s_partition, 
     sc.pp.neighbors(adata, n_neighbors=n_neighbors) 
     sc.tl.umap(adata)
     #color by markers   
-    figname = f"Umapboth_markers_{s_subtype}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}neigh.png"
-    title=figname.split('.png')[0].replace('_',' ')
+    figname = f"Umapboth_markers_{s_subtype}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}neigh.pdf"
+    title=figname.split('.pdf')[0].replace('_',' ')
     sc.pl.umap(adata, color=ls_col,vmin='p1.5',vmax='p99.5',ncols=ncols,save=figname,size=250)
     #platform
     adata.obs['Platform'] = adata.obs.index.astype('str').map(dict(zip(df_surv.index.astype('str'),df_surv.Platform)))
-    figname = f"Umapboth_Platform_{s_subtype}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}neigh.png"
-    title=figname.split('.png')[0].replace('_',' ')
+    figname = f"Umapboth_Platform_{s_subtype}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}neigh.pdf"
+    title=figname.split('.pdf')[0].replace('_',' ')
     sc.pl.umap(adata, color='Platform',save=figname,size=250)
     #subtype
     adata.obs['subtype'] = adata.obs.index.astype('str').map(dict(zip(df_surv.index.astype('str'),df_surv.subtype)))
     #CAREFUL
     adata.obs['subtype'] = adata.obs['subtype'].fillna('TNBC')
-    figname = f"Umapboth_subtype_{s_subtype}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}neigh.png"
-    title=figname.split('.png')[0].replace('_',' ')
+    figname = f"Umapboth_subtype_{s_subtype}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}neigh.pdf"
+    title=figname.split('.pdf')[0].replace('_',' ')
     sc.pl.umap(adata, color='subtype',save=figname,size=250)
     return(adata)
 
 def cluster_leiden(adata, resolution,n_neighbors, s_subtype, s_type, s_partition, s_cell):
     sc.tl.leiden(adata,resolution=resolution)
     fig,ax = plt.subplots(figsize=(2.5,2),dpi=200)
-    figname=f'both_{s_subtype}_{s_partition}_{s_cell}_{n_neighbors}_{resolution}.png'
-    sc.pl.umap(adata, color='leiden',ax=ax,title=figname.split('.png')[0].replace('_',' '),wspace=.25,save=figname,size=40)
+    figname=f'both_{s_subtype}_{s_partition}_{s_cell}_{n_neighbors}_{resolution}.pdf'
+    sc.pl.umap(adata, color='leiden',ax=ax,title=figname.split('.pdf')[0].replace('_',' '),wspace=.25,save=figname,size=40)
     return(adata)
 
 def km_cph(adata,df_surv,s_subtype,s_plat,s_type,s_partition,s_cell,resolution,n_neighbors,savedir=f'{codedir}/20220222/Survival_Plots_Both'):
@@ -561,21 +563,25 @@ def km_cph(adata,df_surv,s_subtype,s_plat,s_type,s_partition,s_cell,resolution,n
                 print(f'{s_group}: {kmf1.median_survival_time_}, {kmf1.percentile(.75)} ({i1.sum()})')
         results = multivariate_logrank_test(event_durations=T, groups=groups, event_observed=E)
         ax.set_title(f'{s_subtype} {s_plat} {s_cell} \nk={resolution}  p={results.summary.p[0]:.1} n={len(df_st)}')
-        ax.legend(loc='upper right')
+        ax.legend(frameon=False,bbox_to_anchor=(1,1))#loc='upper right',
         ax.set_ylim(-0.05,1.05)
         plt.tight_layout()
-        fig.savefig(f'{savedir}/KM_{s_subtype}_{s_plat}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}_{resolution}.png',dpi=300)
+        fig.savefig(f'{savedir}/KM_{s_subtype}_{s_plat}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}_{resolution}.pdf',dpi=300) #KM_ER+_Both_LeidenClustering_leidencelltype2_epithelial_6_0.2
         #CPH
-        df_dummy = pd.get_dummies(df_st.loc[:,['Survival_time','Survival','leiden']])
-        df_dummy = df_dummy.loc[:,df_dummy.sum() != 0]
-        cph = CoxPHFitter(penalizer=0.1)  ## Instantiate the class to create a cph object
-        cph.fit(df_dummy, 'Survival_time', event_col='Survival')
-        fig, ax = plt.subplots(figsize=(2.5,3),dpi=200)
-        cph.plot(ax=ax)
-        pvalue = cph.summary.loc[:,'p'].min()
-        ax.set_title(f'CPH: {s_subtype} {s_plat} {s_cell}\np={pvalue:.2}')
-        plt.tight_layout()
-        fig.savefig(f'{savedir}/CoxPH_{s_subtype}_{s_plat}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}_{resolution}.png',dpi=300)
+        try: 
+            df_dummy = pd.get_dummies(df_st.loc[:,['Survival_time','Survival','leiden']])
+            df_dummy = df_dummy.loc[:,df_dummy.sum() != 0]
+            cph = CoxPHFitter(penalizer=0.1)  ## Instantiate the class to create a cph object
+            cph.fit(df_dummy, 'Survival_time', event_col='Survival')
+            fig, ax = plt.subplots(figsize=(2.5,3),dpi=200)
+            cph.plot(ax=ax)
+            pvalue = cph.summary.loc[:,'p'].min()
+            ax.set_title(f'CPH: {s_subtype} {s_plat} {s_cell}\np={pvalue:.2}')
+            plt.tight_layout()
+            fig.savefig(f'{savedir}/CoxPH_{s_subtype}_{s_plat}_{s_type}_{s_partition}_{s_cell}_{n_neighbors}_{resolution}.pdf',dpi=300)
+        except:
+            cph = 'zero'
+            print(f'skipped CPH')  
     else:
         cph = 'zero'
     return(df_p, cph)
@@ -609,9 +615,9 @@ def km_cph_entropy(df_p,df,ls_col,s_subtype,s_plat,s_cell,savedir=f'{codedir}/20
             s_title1 = f'{s_subtype} {s_plat}'
             s_title2 = f'{s_cell} {s_col}'
             ax.set_title(f'{s_title1}\n{s_title2}\np={results.summary.p[0]:.2}',fontsize=10)
-            ax.legend(loc='upper right')
+            ax.legend(loc='upper right',frameon=False)
             plt.tight_layout()
-            fig.savefig(f"{savedir}/KM_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}.png",dpi=300)
+            fig.savefig(f"{savedir}/KM_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}.pdf",dpi=300)
             cph = CoxPHFitter(penalizer=0.1)
             with warnings.catch_warnings():
                 warnings.simplefilter('ignore')
@@ -625,7 +631,7 @@ def km_cph_entropy(df_p,df,ls_col,s_subtype,s_plat,s_cell,savedir=f'{codedir}/20
                         s_title2 = f'{s_cell} {s_col}'
                         ax.set_title(f'{s_title1}\n{s_title2}\np={cph.summary.p[0]:.2}',fontsize=10)
                         plt.tight_layout()
-                        fig.savefig(f"{savedir}/CPH_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}.png",dpi=300)
+                        fig.savefig(f"{savedir}/CPH_{s_title1.replace(' ','_')}_{s_title2.replace(' ','_')}.pdf",dpi=300)
                 except:
                     print(f'skipped {s_col}')   
 
@@ -892,4 +898,4 @@ def plot_sil(d_sil,s_name='Tumor'):
     ax.set_title(f'{s_name}: Mean Silhoutte Scores')
     ax.set_xlabel('k')
     plt.tight_layout()
-    fig.savefig(f'{s_name}_Silhouette.png')
+    fig.savefig(f'{s_name}_Silhouette.pdf')
